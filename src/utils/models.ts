@@ -28,7 +28,7 @@ export class Task {
  * Tasks filter
  * @typedef filData
  * @type {object}
- * @property {number} type - Task status {waiting , done, cancel}
+ * @property {number} status - Task status {waiting , done, cancel}
  */
 export class filData { 
   /**
