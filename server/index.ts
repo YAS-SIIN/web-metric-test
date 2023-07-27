@@ -1,10 +1,13 @@
-const express = require("express");
-const PORT = 8080;
-const app = express(); // create express app
 
-//Read data from json
-const data = require('./api/api');
+import tasks from "./services/taskService";
+import express from "express";
+
+const PORT = 8080;
+
+const app = express();
  
+console.log('getMembers - body is ', tasks);
+
 app.use(express.json());
 
 app.use(function (req, res, next) {
@@ -17,13 +20,8 @@ app.use(function (req, res, next) {
   next();
 });
 
-
-app.get("/", (req, res) => {
-  res.send("This is from express.js");
-});
-
-
 //Run server using #Yarn Server
+
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
@@ -35,4 +33,16 @@ app.listen(PORT, () => {
 app.get("/api/hello", (req, res) => {
   res.send({ message: "Hello" });
 });
-  
+ 
+ /**
+ * service method to retrieve tasks data
+ * @returns tasks list
+ */
+app.get('/api/getTasks', (req, res) => {
+  console.log('getMembers - body is ', req.body);
+
+  tasks().then((datalist) => {
+    res.send(datalist);
+  });
+});
+
