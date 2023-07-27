@@ -1,27 +1,14 @@
 import React from 'react';
-import logo from './logo.svg';
-import tasks from '../server/services/json_files/tasks.json';
 import './App.css';
+import { Tasks } from './features/tasks/Tasks';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <h3>Crewmeister challange test - programmer : Yasin Asadnezhad</h3>  
+ 
+     <Tasks />
+ </div>
   );
 }
 
