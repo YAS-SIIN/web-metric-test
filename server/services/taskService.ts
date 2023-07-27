@@ -10,8 +10,6 @@ const readJsonFile = (path) => new Promise((resolve) => fs.readFile(path, 'utf8'
 
   console.log(TASKS_PATH);
 
-  //let tasks = require(TASKS_PATH);
- 
 const tasks = () => readJsonFile(TASKS_PATH);
 
 export default tasks
