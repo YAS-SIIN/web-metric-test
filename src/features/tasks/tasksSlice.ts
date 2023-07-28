@@ -14,7 +14,7 @@ const initialState = {
  * @param _filData - object of filter data : {status}
  */
 export const getTasksList = createAsyncThunk("getTasks", async (_filData: filData = new filData()) => {
-
+  debugger;
   //call getTasks service method
   const res = await tasksService.getTasks(_filData);
   return res;

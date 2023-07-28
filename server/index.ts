@@ -1,4 +1,5 @@
 
+import { Task, filData } from "./models/models";
 import tasks from "./services/taskService";
 import express from "express";
 
@@ -38,10 +39,16 @@ app.get("/api/hello", (req, res) => {
  * service method to retrieve tasks data
  * @returns tasks list
  */
-app.get('/api/getTasks', (req, res) => {
-  console.log('getMembers - body is ', req.body);
-
-  tasks().then((datalist) => {
+app.post('/api/getTasks', (req, res) => {
+  console.log('getTasks - body is ', req.body);
+   var dataBody : filData = req.body ? req.body : null;
+  tasks().then((datalist : Task[]) => {
+    if (dataBody !== undefined) {
+      if (dataBody.status !== 0) {
+        console.log('status filtered');
+        datalist = datalist.filter(task => task.status === dataBody.status);
+      }
+    } 
     res.send(datalist);
   });
 });

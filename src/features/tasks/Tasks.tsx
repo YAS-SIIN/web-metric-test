@@ -11,6 +11,7 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import { filData } from '../../utils/models';
 import { getTasksList } from './tasksSlice';
+import { Spinner } from 'react-bootstrap';
 
 /**
  * Tasks page with data
@@ -18,16 +19,37 @@ import { getTasksList } from './tasksSlice';
  */
 export function Tasks() {
 
+  const columns = [
+    { name: 'Task', selector: row => row.task },
+    { name: 'Status', selector: row => row.status === 1 ? 'waiting' : row.status === 2 ? 'done' : 'canceled' },
+  ];
+ 
   const _filData = new filData();
   const dispatch = useAppDispatch();
-  const [status, setStatus] = useState('0');
+  const [status, setStatus] = useState(0);
+
+    /**
+ * method to filter data
+ * @returns filtered list
+ */
+    const filter = () => {
+
+      const _filData = new filData(); 
+      _filData.status = status;
+  
+      dispatch(getTasksList(_filData));
+    };
 
   useEffect(() => {
 
     dispatch(getTasksList(_filData));
   }, [dispatch]);
 
-  const {} = useAppSelector((state) => state.absencesReducer);
+  const {
+    tasks,
+    loading,
+    error,
+  } = useAppSelector((state) => state.absencesReducer);
 
   return (
     <div>
@@ -40,7 +62,7 @@ export function Tasks() {
             <Row>
               <Col>
                 <label>Status :</label >
-                <Form.Select aria-label="Status"  onChange={(e) => { setStatus(e.target.value); }}>
+                <Form.Select aria-label="Status"  onChange={(e) => { setStatus(parseInt(e.target.value)); }}>
                   <option value="0">All</option>
                   <option value="1">waiting</option>
                   <option value="2">done</option>
@@ -59,7 +81,7 @@ export function Tasks() {
               <Col>
               </Col>
               <Col>
-                <Button variant="primary">Filter</Button>
+                <Button variant="primary" onClick={filter}>Filter</Button>
               </Col>
               <Col>
 
@@ -73,8 +95,15 @@ export function Tasks() {
       <Card>
         <Card.Header>Data <i></i></Card.Header>
         <Card.Body>
-        <Alert variant='danger'>There is an error</Alert>
-     
+          {error && <Alert variant='danger'>There is an error</Alert>}
+          {!error && loading ? (
+            <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
+          ) : (
+            <>
+              {!error && tasks && (<><label>Total absences is: {tasks.length}</label> <DataTable columns={columns} data={tasks} striped pagination /></>)}
+
+            </>
+          )}
         </Card.Body>
       </Card>
     </div>
