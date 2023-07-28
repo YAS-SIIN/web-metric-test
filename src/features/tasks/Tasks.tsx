@@ -9,7 +9,7 @@ import Row from 'react-bootstrap/Row';
 import DataTable from 'react-data-table-component';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-import { filData } from '../../utils/models';
+import { Task, filData } from '../../utils/models';
 import { getTasksList } from './tasksSlice';
 import { Spinner } from 'react-bootstrap';
 
@@ -23,22 +23,25 @@ export function Tasks() {
     { name: 'Task', selector: row => row.task },
     { name: 'Status', selector: row => row.status === 1 ? 'waiting' : row.status === 2 ? 'done' : 'canceled' },
   ];
- 
+
   const _filData = new filData();
+  const _task = new Task();
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState(0);
+  const [createEditVisible, setCreateEditVisible] = useState(false);
+  const [task, setTask] = useState(_task);
 
-    /**
- * method to filter data
- * @returns filtered list
- */
-    const filter = () => {
+  /**
+* method to filter data
+* @returns filtered list
+*/
+  const filter = () => {
 
-      const _filData = new filData(); 
-      _filData.status = status;
-  
-      dispatch(getTasksList(_filData));
-    };
+    const _filData = new filData();
+    _filData.status = status;
+
+    dispatch(getTasksList(_filData));
+  };
 
   useEffect(() => {
 
@@ -53,8 +56,17 @@ export function Tasks() {
 
   return (
     <div>
+            {createEditVisible && <Row>
+              <Col>
+              </Col>
+              <Col>
+                <Button variant="warning" style={{width : "100%"}} onClick={(e) => { setCreateEditVisible(false)}}>Back</Button>
+              </Col>
+              <Col>
+              </Col>
+            </Row>}
 
-      <Card>
+{!createEditVisible && <Card>
         <Card.Header>Filter <i></i></Card.Header>
         <Card.Body>
 
@@ -62,7 +74,7 @@ export function Tasks() {
             <Row>
               <Col>
                 <label>Status :</label >
-                <Form.Select aria-label="Status"  onChange={(e) => { setStatus(parseInt(e.target.value)); }}>
+                <Form.Select aria-label="Status" onChange={(e) => { setStatus(parseInt(e.target.value)); }}>
                   <option value="0">All</option>
                   <option value="1">waiting</option>
                   <option value="2">done</option>
@@ -70,10 +82,10 @@ export function Tasks() {
                 </Form.Select>
               </Col>
               <Col>
- 
+
               </Col>
               <Col>
- 
+
               </Col>
             </Row>
             <br />
@@ -81,18 +93,20 @@ export function Tasks() {
               <Col>
               </Col>
               <Col>
-                <Button variant="primary" onClick={filter}>Filter</Button>
+                <Button variant="primary" style={{width : "100%"}} onClick={filter}>Filter</Button>
               </Col>
               <Col>
-
+                <Button variant="primary" style={{width : "100%"}}  onClick={(e) => { setCreateEditVisible(true)}}>Create New</Button>
+              </Col>
+              <Col> 
               </Col>
             </Row>
           </Form>
 
         </Card.Body>
-      </Card>
+      </Card>}
       <br></br>
-      <Card>
+      {!createEditVisible && <Card>
         <Card.Header>Data <i></i></Card.Header>
         <Card.Body>
           {error && <Alert variant='danger'>There is an error</Alert>}
@@ -105,7 +119,49 @@ export function Tasks() {
             </>
           )}
         </Card.Body>
-      </Card>
+      </Card>}
+      {createEditVisible && <Card>
+        <Card.Header>Create\Edit data <i></i></Card.Header>
+        <Card.Body>
+
+          <Form>
+            <Row>
+              <Col>
+
+                <label>Task :</label>
+                <Form.Control type="text" id="Task" placeholder="Task title" value={task.task} onChange={(e) => { task.task = e.target.value; setTask(task); }}  />
+              </Col>
+              <Col>
+                <label>Status : </label >
+                <Form.Select aria-label="Status" placeholder="Select one" onChange={(e) => { task.status = parseInt(e.target.value); setTask(task); }}>
+                  <option value="1">waiting</option>
+                  <option value="2">done</option>
+                  <option value="3">cancel</option>
+                </Form.Select>
+              </Col>
+              <Col>
+
+              </Col>
+              <Col>
+
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col>
+              </Col>
+              <Col>
+                <Button variant="success" style={{width : "100%"}} >Submit</Button>
+              </Col>
+              <Col>
+
+              </Col>
+            </Row>
+          </Form>
+
+        </Card.Body>
+      </Card>}
+      
     </div>
   );
 }

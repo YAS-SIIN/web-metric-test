@@ -1,13 +1,13 @@
 
 import { Task, filData } from "./models/models";
-import tasks from "./services/taskService";
+import taskService from "./services/taskService";
 import express from "express";
 
 const PORT = 8080;
 
 const app = express();
  
-console.log('getMembers - body is ', tasks);
+console.log('getMembers - body is ', taskService.tasks);
 
 app.use(express.json());
 
@@ -41,15 +41,34 @@ app.get("/api/hello", (req, res) => {
  */
 app.post('/api/getTasks', (req, res) => {
   console.log('getTasks - body is ', req.body);
-   var dataBody : filData = req.body ? req.body : null;
-  tasks().then((datalist : Task[]) => {
-    if (dataBody !== undefined) {
-      if (dataBody.status !== 0) {
+   var dataBody : filData = req.body;
+   console.log('filter data is :', dataBody);
+   taskService.tasks().then((datalist : Task[]) => {
+  
+      if (!(dataBody.status === undefined || dataBody.status === 0)) {
         console.log('status filtered');
         datalist = datalist.filter(task => task.status === dataBody.status);
-      }
-    } 
-    res.send(datalist);
+      } 
+    res.status(200).send(datalist);
   });
+});
+
+
+ /**
+ * service method to create tasks
+ * @returns created task
+ */
+ app.post('/api/createTasks', (req, res) => {
+  console.log('getTasks - body is ', req.body);
+   var dataBody : filData = req.body ? req.body : null;
+   if (!(dataBody.status === undefined || dataBody.status === 0)) {
+    taskService.tasks().then((datalist : Task[]) => {
+      let mergedArray = [...datalist, dataBody];
+      taskService.newTasks(JSON.stringify(mergedArray)).then();
+      res.status(200);
+    });
+   } else { 
+    res.status(500).statusMessage= 'Data not entered';
+   }
 });
 
