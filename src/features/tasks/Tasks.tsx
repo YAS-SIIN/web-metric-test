@@ -10,7 +10,7 @@ import DataTable from 'react-data-table-component';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import { Task, filData } from '../../utils/models';
-import { getTasksList } from './tasksSlice';
+import { createTask, getTasksList } from './tasksSlice';
 import { Spinner } from 'react-bootstrap';
 
 /**
@@ -24,8 +24,8 @@ export function Tasks() {
     { name: 'Status', selector: row => row.status === 1 ? 'waiting' : row.status === 2 ? 'done' : 'canceled' },
   ];
 
-  const _filData = new filData();
-  const _task = new Task();
+  let _filData = new filData();
+  let _task = new Task();
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState(0);
   const [createEditVisible, setCreateEditVisible] = useState(false);
@@ -35,12 +35,28 @@ export function Tasks() {
 * method to filter data
 * @returns filtered list
 */
-  const filter = () => {
+  const handleFilter = () => {
 
-    const _filData = new filData();
+    _filData = new filData();
     _filData.status = status;
 
     dispatch(getTasksList(_filData));
+  };
+
+
+  const handleSubmit = () => {
+    debugger
+    if (task) {
+      dispatch(createTask(task));
+      handleBack();
+       
+    }
+  };
+
+  const handleBack = () => {
+    _task = new Task();
+    setTask(_task);
+    setCreateEditVisible(false);
   };
 
   useEffect(() => {
@@ -52,21 +68,22 @@ export function Tasks() {
     tasks,
     loading,
     error,
-  } = useAppSelector((state) => state.absencesReducer);
+    dataChanged,
+  } = useAppSelector((state) => state.tasksReducer);
 
   return (
     <div>
-            {createEditVisible && <Row>
-              <Col>
-              </Col>
-              <Col>
-                <Button variant="warning" style={{width : "100%"}} onClick={(e) => { setCreateEditVisible(false)}}>Back</Button>
-              </Col>
-              <Col>
-              </Col>
-            </Row>}
+      {createEditVisible && <Row>
+        <Col>
+        </Col>
+        <Col>
+          <Button variant="warning" style={{ width: "100%" }} onClick={handleBack}>Back</Button>
+        </Col>
+        <Col>
+        </Col>
+      </Row>}
 
-{!createEditVisible && <Card>
+      {!createEditVisible && <Card>
         <Card.Header>Filter <i></i></Card.Header>
         <Card.Body>
 
@@ -93,12 +110,12 @@ export function Tasks() {
               <Col>
               </Col>
               <Col>
-                <Button variant="primary" style={{width : "100%"}} onClick={filter}>Filter</Button>
+                <Button variant="primary" style={{ width: "100%" }} onClick={handleFilter}>Filter</Button>
               </Col>
               <Col>
-                <Button variant="primary" style={{width : "100%"}}  onClick={(e) => { setCreateEditVisible(true)}}>Create New</Button>
+                <Button variant="primary" style={{ width: "100%" }} onClick={(e) => { setCreateEditVisible(true) }}>Create New</Button>
               </Col>
-              <Col> 
+              <Col>
               </Col>
             </Row>
           </Form>
@@ -114,7 +131,7 @@ export function Tasks() {
             <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
           ) : (
             <>
-              {!error && tasks && (<><label>Total absences is: {tasks.length}</label> <DataTable columns={columns} data={tasks} striped pagination /></>)}
+              {!error && tasks && (<><label>Total tasks is: {tasks.length}</label> <DataTable columns={columns} data={tasks} striped pagination /></>)}
 
             </>
           )}
@@ -129,11 +146,11 @@ export function Tasks() {
               <Col>
 
                 <label>Task :</label>
-                <Form.Control type="text" id="Task" placeholder="Task title" value={task.task} onChange={(e) => { task.task = e.target.value; setTask(task); }}  />
+                <Form.Control type="text" id="Task" placeholder="Task title" value={task.task} onChange={(e) => { _task.task = e.target.value; setTask(_task); }} />
               </Col>
               <Col>
                 <label>Status : </label >
-                <Form.Select aria-label="Status" placeholder="Select one" onChange={(e) => { task.status = parseInt(e.target.value); setTask(task); }}>
+                <Form.Select aria-label="Status" placeholder="Select one" onChange={(e) => { _task.status = parseInt(e.target.value); setTask(_task); }}>
                   <option value="1">waiting</option>
                   <option value="2">done</option>
                   <option value="3">cancel</option>
@@ -151,7 +168,7 @@ export function Tasks() {
               <Col>
               </Col>
               <Col>
-                <Button variant="success" style={{width : "100%"}} >Submit</Button>
+                <Button variant="success" style={{ width: "100%" }} onClick={handleSubmit} >Submit</Button>
               </Col>
               <Col>
 
@@ -161,7 +178,7 @@ export function Tasks() {
 
         </Card.Body>
       </Card>}
-      
+
     </div>
   );
 }

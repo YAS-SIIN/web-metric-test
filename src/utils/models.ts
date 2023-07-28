@@ -19,7 +19,7 @@ export class Task {
   /**
    * Task status
    */
-  status: number;
+  status: number = 1;
 
 };
 

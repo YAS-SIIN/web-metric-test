@@ -58,17 +58,19 @@ app.post('/api/getTasks', (req, res) => {
  * service method to create tasks
  * @returns created task
  */
- app.post('/api/createTasks', (req, res) => {
-  console.log('getTasks - body is ', req.body);
-   var dataBody : filData = req.body ? req.body : null;
-   if (!(dataBody.status === undefined || dataBody.status === 0)) {
+ app.post('/api/createTask', (req, res) => {
+  console.log('createTask - body is ', req.body);
+   var dataBody : Task = req.body ? req.body : null;
+   if (!(dataBody.status === undefined || dataBody.task === '')) {
     taskService.tasks().then((datalist : Task[]) => {
+      const MaxId : number= Math.max.apply(Math, datalist.map(o => { return o.id; }));
+      dataBody.id = MaxId+1;
       let mergedArray = [...datalist, dataBody];
       taskService.newTasks(JSON.stringify(mergedArray)).then();
-      res.status(200);
+      res.status(200).send(dataBody);
     });
    } else { 
-    res.status(500).statusMessage= 'Data not entered';
+    res.status(500).send().statusMessage= 'Data not entered';
    }
 });
 
