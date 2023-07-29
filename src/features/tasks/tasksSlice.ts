@@ -14,7 +14,7 @@ const initialState : InitialStateModel = {
 
 /**
  * Thunk to get tasks list in redux
- * @param _filData - object of filter data : {status}
+ * @param {filData} _filData - object of filter data : {status}
  */
 export const getTasksList = createAsyncThunk("getTasks", async (_filData: filData = new filData()) => {
    
@@ -24,13 +24,35 @@ export const getTasksList = createAsyncThunk("getTasks", async (_filData: filDat
 });
 
 /**
- * Thunk to get tasks list in redux
- * @param _filData - object of filter data : {status}
+ * Thunk to create task in redux
+ * @param {Task} _inputData - object of create data
  */
 export const createTask = createAsyncThunk("createTask", async (_inputData: Task = new Task()) => {
    
   //call getTasks service method
   const res = await tasksService.createTask(_inputData);
+  return res;
+});
+
+/**
+ * Thunk to update task in redux
+ * @param {Task} _inputData - object of updateTask data
+ */
+export const updateTask = createAsyncThunk("updateTask", async (_inputData: Task = new Task()) => {
+   
+  //call getTasks service method
+  const res = await tasksService.updateTask(_inputData);
+  return res;
+});
+
+/**
+ * Thunk to update task in redux
+ * @param {Task} _inputData - object of updateTask data
+ */
+export const deleteTask = createAsyncThunk("deleteTask", async (id: number) => {
+   
+  //call getTasks service method
+  const res = await tasksService.deleteTask(id);
   return res;
 });
 
@@ -43,7 +65,7 @@ export const createTask = createAsyncThunk("createTask", async (_inputData: Task
  * @returns member 
  */
 const tasksSlice = createSlice({
-  name: "tasksList",
+  name: "tasksSlice",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {},

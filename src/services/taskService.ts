@@ -4,7 +4,7 @@ import { Task, TaskResponseModel, filData } from "../utils/models";
 
 /** 
  * call getTasks Rest Api from back-end server to retrieve list of tasks  
- * @param _filData - object of filter data : {status}
+ * @param {filData} _filData - object of filter data : {status}
  * @returns list of tasks 
  */
 const getTasks = async (_filData: filData = new filData()) : Promise<TaskResponseModel> => {
@@ -24,8 +24,8 @@ const getTasks = async (_filData: filData = new filData()) : Promise<TaskRespons
 
 /** 
  * call createTask Rest Api from back-end server to create new task  
- * @param Task - object of task data 
- * @returns list of tasks 
+ * @param {Task} Task - object of task data 
+ * @returns new task 
  */
 const createTask = async (_inputData: Task = new Task()) => {
   debugger
@@ -41,8 +41,47 @@ const createTask = async (_inputData: Task = new Task()) => {
     return response.json(); 
 };
   
+/** 
+ * call updateTask Rest Api from back-end server to update task  
+ * @param {Task} Task - object of task data 
+ */
+const updateTask = async (_inputData: Task = new Task()) => {
+  debugger
+  //call updateTask Rest API from server
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/updateTask`, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(_inputData)
+  });
+    return response.json(); 
+};
+  
+/** 
+ * call deleteTask Rest Api from back-end server to delete new task  
+ * @param {number} id - id
+ */
+const deleteTask = async (id: number) => {
+  debugger
+  //call updateTaskStatus Rest API from server
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/updateTaskStatus/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+  });
+    return response.json(); 
+};
+  
+ 
+
 const taskService = {
   getTasks,
-  createTask
+  createTask,
+  updateTask,
+  deleteTask
 };
 export default taskService;
