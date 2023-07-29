@@ -22,6 +22,12 @@ export function Tasks() {
   const columns = [
     { name: 'Task', selector: row => row.task },
     { name: 'Status', selector: row => row.status === 1 ? 'waiting' : row.status === 2 ? 'done' : 'canceled' },
+    { name: 'Actions', cell: (props) => (
+      <> 
+      {props.status === 1 && <Button variant="warning" onClick={(e)=> {handleEdit(e, props)}}>Edit</Button>} 
+      {props.status === 1 && <Button variant="success" onClick={(e)=> {handleChangeStatus(e, props.id, 2)}}>Confirm</Button>}
+      {props.status === 1 && <Button variant="danger" onClick={(e)=> {handleChangeStatus(e, props.id, 3)}}>Cancele</Button>}
+      </>)  },
   ];
 
   let _filData = new filData();
@@ -29,6 +35,7 @@ export function Tasks() {
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState(0);
   const [createEditVisible, setCreateEditVisible] = useState(false);
+  const [saveMode, setSaveMode] = useState('New');
   const [task, setTask] = useState(_task);
 
   /**
@@ -47,9 +54,12 @@ export function Tasks() {
   const handleSubmit = () => {
     debugger
     if (task) {
-      dispatch(createTask(task));
-      handleBack();
-       
+      if (saveMode === 'New') {
+        dispatch(createTask(task));
+      } else if (saveMode === 'Edit') { 
+       // dispatch(updateTask(task));
+      }
+      handleBack(); 
     }
   };
 
@@ -59,6 +69,29 @@ export function Tasks() {
     setCreateEditVisible(false);
   };
 
+  const handleChangeStatus = (e : any ,rowId: number, state: number) => { 
+    e.preventDefault();
+    console.log(rowId);
+    //dispatch(createTask(task));
+  };
+ 
+  const handleEdit = (e : any ,row: Task) => { 
+    e.preventDefault();
+    console.log(row);
+    setTask(row);
+    setSaveMode('Edit');
+    setCreateEditVisible(true);
+    //dispatch(createTask(task));
+  };
+ 
+  const handleNew = () => { 
+    _task = new Task();
+    _task.task='';
+    setTask(_task);  
+    setSaveMode('New');
+    setCreateEditVisible(true); 
+  };
+ 
   useEffect(() => {
 
     dispatch(getTasksList(_filData));
@@ -113,7 +146,7 @@ export function Tasks() {
                 <Button variant="primary" style={{ width: "100%" }} onClick={handleFilter}>Filter</Button>
               </Col>
               <Col>
-                <Button variant="primary" style={{ width: "100%" }} onClick={(e) => { setCreateEditVisible(true) }}>Create New</Button>
+                <Button variant="primary" style={{ width: "100%" }} onClick={handleNew}>Create New</Button>
               </Col>
               <Col>
               </Col>

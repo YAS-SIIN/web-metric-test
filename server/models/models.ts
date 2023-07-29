@@ -23,8 +23,7 @@ export class Task {
   status: number;
 
 };
-
-
+ 
 /**
  * Tasks filter
  * @typedef filData
@@ -37,3 +36,25 @@ export class filData {
    */
   status!: number; 
 };
+
+/**
+ * Base Response 
+ * @typedef BaseResponseModel
+ * @type {object}
+ * @property {string} message - message
+ */
+export class BaseResponseModel {
+  message!: string;
+}
+ 
+
+/**
+ * Task Response 
+ * @typedef TaskResponseModel
+ * @type {object}
+ * @property {Task} data - Task data list
+ */
+export class TaskResponseModel extends BaseResponseModel {
+  data!: Task[];
+}
+

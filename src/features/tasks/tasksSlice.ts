@@ -55,8 +55,9 @@ const tasksSlice = createSlice({
       state.dataChanged = false;
     });
     builder.addCase(getTasksList.fulfilled, (state, action) => {
+      debugger
       state.loading = false;
-      state.tasks = action.payload; 
+      state.tasks = action.payload.data; 
       state.dataChanged = false;
     });
     builder.addCase(getTasksList.rejected, (state, action) => {
