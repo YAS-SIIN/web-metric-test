@@ -36,3 +36,49 @@ export class filData {
    */
   status!: number; 
 };
+
+/**
+ * Base Response 
+ * @typedef BaseResponseModel
+ * @type {object}
+ * @property {string} message - message
+ */
+export class BaseResponseModel {
+  /**
+   * message
+   */
+  message!: string;
+}
+  
+/**
+ * Task Response 
+ * @typedef TaskResponseModel
+ * @type {object}
+ * @property {Task} data - Tasks data list
+ */
+export class TaskResponseModel extends BaseResponseModel {
+  /**
+   * Tasks data list
+   */
+  data!: Task[];
+}
+
+/**
+ * Initial State 
+ * @typedef InitialStateModel
+ * @type {object}
+ * @property {TaskResponseModel} tasks - Tasks data list
+ * @property {Task} task - Task data
+ * @property {boolean} loading - loading
+ * @property {boolean} error - error
+ * @property {boolean} dataChanged - dataChanged
+ */
+export class InitialStateModel extends BaseResponseModel {
+  tasks: Task[];
+  task: Task;
+  loading: boolean;
+  error: boolean;
+  dataChanged: boolean;
+  message: string;
+}
+ 

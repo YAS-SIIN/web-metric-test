@@ -90,12 +90,58 @@ app.post('/api/createTask', (req, res) => {
 app.put('/api/updateTask/:id', (req, res) => {
   console.log('updateTask - body is ', req.params);
   let baseResponseData: BaseResponseModel = new BaseResponseModel();
+  var dataBody: Task = req.body ? req.body : null;
 
-  if (!(req.params === undefined || req.params.id === '')) {
+  if (!(dataBody.status === undefined || dataBody.task === undefined || dataBody.task === '')) {
     taskService.tasks().then((datalist: Task[]) => {
-      let newDataList = datalist.filter(row => row.id != parseInt(req.params.id));
 
-      taskService.newTasks(JSON.stringify(newDataList)).then();
+      datalist = datalist.map(a => {
+        if (a.id !== dataBody.id) {
+          return a;
+        }
+        else {
+          return dataBody;
+        }
+      });
+
+      taskService.newTasks(JSON.stringify(datalist)).then();
+
+      baseResponseData.message = 'Done successfully';
+      res.status(200).send(baseResponseData);
+    });
+  } else {
+    baseResponseData.message = 'Data not entered';
+    res.status(500).send(baseResponseData).statusMessage = baseResponseData.message;
+  }
+});
+
+/**
+* service method to update task status
+* @returns update status
+*/
+app.put('/api/updateTaskStatus/:id/:status', (req, res) => {
+  console.log('updateTaskStatus - body is ', req.params);
+  let baseResponseData: BaseResponseModel = new BaseResponseModel();
+  var dataBody: Task;
+
+  if (!(req.params === undefined || req.params.id === undefined || req.params.id === '')) {
+    taskService.tasks().then((datalist: Task[]) => {
+      dataBody = datalist.find(a => a.id == parseInt(req.params.id))
+      if (!dataBody) { 
+        baseResponseData.message = 'Data not found';
+        res.status(500).send(baseResponseData).statusMessage = baseResponseData.message;
+      }
+      datalist = datalist.map(row => {
+        if (row.id !== dataBody.id) {
+          return row;
+        }
+        else {
+          dataBody.status = parseInt(req.params.status);
+          return dataBody;
+        }
+      });
+
+      taskService.newTasks(JSON.stringify(datalist)).then();
 
       baseResponseData.message = 'Done successfully';
       res.status(200).send(baseResponseData);
@@ -107,24 +153,22 @@ app.put('/api/updateTask/:id', (req, res) => {
 });
 
 
+
 /**
 * service method to delete tasks
 * @returns delete task
 */
-app.delete('/api/deleteTask', (req, res) => {
+app.delete('/api/deleteTask/:id', (req, res) => {
   console.log('deleteTask - body is ', req.body);
   let baseResponseData: BaseResponseModel = new BaseResponseModel();
-  var dataBody: Task = req.body ? req.body : null;
 
-  if (!(dataBody.status === undefined || dataBody.task === '')) {
+
+  if (!(req.params === undefined || req.params.id === undefined || req.params.id === '')) {
     taskService.tasks().then((datalist: Task[]) => {
-      let row = datalist.find(row => row.id == dataBody.id);
-      row.status = dataBody.status;
-      row.task = dataBody.task;
-      let mergedArray = [...datalist, dataBody];
-      taskService.newTasks(JSON.stringify(mergedArray)).then();
-      
-      
+      datalist = datalist.filter(row => row.id != parseInt(req.params.id));
+
+      taskService.newTasks(JSON.stringify(datalist)).then();
+
       baseResponseData.message = 'Done successfully';
       res.status(200).send(baseResponseData);
     });

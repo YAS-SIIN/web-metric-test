@@ -1,4 +1,4 @@
-import { Task, filData } from "../utils/models";
+import { Task, TaskResponseModel, filData } from "../utils/models";
 
  
 
@@ -7,7 +7,7 @@ import { Task, filData } from "../utils/models";
  * @param _filData - object of filter data : {status}
  * @returns list of tasks 
  */
-const getTasks = async (_filData: filData = new filData()) => {
+const getTasks = async (_filData: filData = new filData()) : Promise<TaskResponseModel> => {
   console.log(process.env.REACT_APP_API_URL);
   //call getTasks Rest API from server
   const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/getTasks`, {

@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import tasksService from "../../services/taskService";
-import { Task, filData } from "../../utils/models";
+import { InitialStateModel, Task, filData } from "../../utils/models";
 
 
-const initialState = {
+const initialState : InitialStateModel = {
   tasks: [],
-  task: {},
+  task: new Task(),
   loading: false,
   error: false,
-  dataChanged: false
+  dataChanged: false,
+  message: ""
 };
 
 /**

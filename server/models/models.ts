@@ -37,6 +37,7 @@ export class filData {
   status!: number; 
 };
 
+
 /**
  * Base Response 
  * @typedef BaseResponseModel
@@ -44,17 +45,21 @@ export class filData {
  * @property {string} message - message
  */
 export class BaseResponseModel {
+  /**
+   * message
+   */
   message!: string;
 }
- 
-
+  
 /**
  * Task Response 
  * @typedef TaskResponseModel
  * @type {object}
- * @property {Task} data - Task data list
+ * @property {Task} data - Tasks data list
  */
 export class TaskResponseModel extends BaseResponseModel {
+  /**
+   * Tasks data list
+   */
   data!: Task[];
 }
-
