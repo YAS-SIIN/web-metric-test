@@ -1,10 +1,10 @@
  
 /**
  * Task
- * @typedef Member
+ * @typedef Task
  * @type {object}
  * @property {number} id - id
- * @property {string} image - Task title
+ * @property {string} title - Task title
  * @property {number} status - Task status
  */
 export class Task {
@@ -62,6 +62,7 @@ export class TaskResponseModel extends BaseResponseModel {
    */
   data!: Task[];
 }
+
 
 /**
  * Initial State 

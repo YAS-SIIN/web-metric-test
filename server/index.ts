@@ -87,12 +87,12 @@ app.post('/api/createTask', (req, res) => {
 * service method to update tasks
 * @returns update task
 */
-app.put('/api/updateTask/:id', (req, res) => {
-  console.log('updateTask - body is ', req.params);
+app.put('/api/updateTask', (req, res) => {
+  console.log('updateTask - body is ', req.body);
   let baseResponseData: BaseResponseModel = new BaseResponseModel();
   var dataBody: Task = req.body ? req.body : null;
 
-  if (!(dataBody.status === undefined || dataBody.task === undefined || dataBody.task === '')) {
+  if (!(dataBody.status === undefined || dataBody.id === undefined || dataBody.task === undefined || dataBody.task === '')) {
     taskService.tasks().then((datalist: Task[]) => {
 
       datalist = datalist.map(a => {
@@ -114,44 +114,6 @@ app.put('/api/updateTask/:id', (req, res) => {
     res.status(500).send(baseResponseData).statusMessage = baseResponseData.message;
   }
 });
-
-/**
-* service method to update task status
-* @returns update status
-*/
-app.put('/api/updateTaskStatus/:id/:status', (req, res) => {
-  console.log('updateTaskStatus - body is ', req.params);
-  let baseResponseData: BaseResponseModel = new BaseResponseModel();
-  var dataBody: Task;
-
-  if (!(req.params === undefined || req.params.id === undefined || req.params.id === '')) {
-    taskService.tasks().then((datalist: Task[]) => {
-      dataBody = datalist.find(a => a.id == parseInt(req.params.id))
-      if (!dataBody) { 
-        baseResponseData.message = 'Data not found';
-        res.status(500).send(baseResponseData).statusMessage = baseResponseData.message;
-      }
-      datalist = datalist.map(row => {
-        if (row.id !== dataBody.id) {
-          return row;
-        }
-        else {
-          dataBody.status = parseInt(req.params.status);
-          return dataBody;
-        }
-      });
-
-      taskService.newTasks(JSON.stringify(datalist)).then();
-
-      baseResponseData.message = 'Done successfully';
-      res.status(200).send(baseResponseData);
-    });
-  } else {
-    baseResponseData.message = 'Data not entered';
-    res.status(500).send(baseResponseData).statusMessage = baseResponseData.message;
-  }
-});
-
 
 
 /**

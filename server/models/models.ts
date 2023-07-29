@@ -2,10 +2,10 @@
 
 /**
  * Task
- * @typedef Member
+ * @typedef Task
  * @type {object}
  * @property {number} id - id
- * @property {string} image - Task title
+ * @property {string} task - Task title
  * @property {number} status - Task status
  */
 export class Task {
