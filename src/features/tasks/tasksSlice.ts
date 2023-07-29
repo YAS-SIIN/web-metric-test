@@ -25,7 +25,7 @@ export const getTasksList = createAsyncThunk("getTasks", async (_filData: filDat
 
 /**
  * Thunk to create task in redux
- * @param {Task} _inputData - object of create data
+ * @param {Task} _inputData - object of Task data
  */
 export const createTask = createAsyncThunk("createTask", async (_inputData: Task = new Task()) => {
    
@@ -36,7 +36,7 @@ export const createTask = createAsyncThunk("createTask", async (_inputData: Task
 
 /**
  * Thunk to update task in redux
- * @param {Task} _inputData - object of updateTask data
+ * @param {Task} _inputData - object of Task data
  */
 export const updateTask = createAsyncThunk("updateTask", async (_inputData: Task = new Task()) => {
    
@@ -46,8 +46,19 @@ export const updateTask = createAsyncThunk("updateTask", async (_inputData: Task
 });
 
 /**
+ * Thunk to update task status in redux
+ * @param {Task} _inputData - object of Task data
+ */
+export const updateTaskStatus = createAsyncThunk("updateTaskStatus", async (_inputData: Task = new Task()) => {
+   
+  //call getTasks service method
+  const res = await tasksService.updateTaskStatus(_inputData);
+  return res;
+});
+
+/**
  * Thunk to update task in redux
- * @param {Task} _inputData - object of updateTask data
+ * @param {number} id - id
  */
 export const deleteTask = createAsyncThunk("deleteTask", async (id: number) => {
    
@@ -104,7 +115,55 @@ const tasksSlice = createSlice({
       state.dataChanged = false;
     });
 
+    builder.addCase(updateTask.pending, (state, action) => {
+      debugger
+      state.loading = true;
+      state.dataChanged = false;
+    });
+    builder.addCase(updateTask.fulfilled, (state, action) => {
+      debugger
+      state.loading = false; 
+      state.dataChanged = true;
+    });
+    builder.addCase(updateTask.rejected, (state, action) => {
+      debugger
+      state.error = true;
+      state.dataChanged = false;
+    });
 
+    builder.addCase(updateTaskStatus.pending, (state, action) => {
+      debugger
+      state.loading = true;
+      state.dataChanged = false;
+    });
+    builder.addCase(updateTaskStatus.fulfilled, (state, action) => {
+      debugger
+      state.loading = false; 
+      state.dataChanged = true;
+    });
+    builder.addCase(updateTaskStatus.rejected, (state, action) => {
+      debugger
+      state.error = true;
+      state.dataChanged = false;
+    });
+
+
+    builder.addCase(deleteTask.pending, (state, action) => {
+      debugger
+      state.loading = true;
+      state.dataChanged = false;
+    });
+    builder.addCase(deleteTask.fulfilled, (state, action) => {
+      debugger
+      state.loading = false; 
+      state.dataChanged = true;
+    });
+    builder.addCase(deleteTask.rejected, (state, action) => {
+      debugger
+      state.error = true;
+      state.dataChanged = false;
+    });
+  
   },
 });
 

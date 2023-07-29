@@ -10,7 +10,7 @@ import DataTable from 'react-data-table-component';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import { Task, filData } from '../../utils/models';
-import { createTask, getTasksList } from './tasksSlice';
+import { createTask, deleteTask, getTasksList, updateTask, updateTaskStatus } from './tasksSlice';
 import { Spinner } from 'react-bootstrap';
 
 /**
@@ -27,6 +27,7 @@ export function Tasks() {
       {props.status === 1 && <Button variant="warning" onClick={(e)=> {handleEdit(e, props)}}>Edit</Button>} 
       {props.status === 1 && <Button variant="success" onClick={(e)=> {handleChangeStatus(e, props.id, 2)}}>Confirm</Button>}
       {props.status === 1 && <Button variant="danger" onClick={(e)=> {handleChangeStatus(e, props.id, 3)}}>Cancele</Button>}
+      {props.status === 1 && <Button variant="danger" onClick={(e)=> {handleDelete(e, props.id)}}>Delete</Button>}
       </>)  },
   ];
 
@@ -57,7 +58,7 @@ export function Tasks() {
       if (saveMode === 'New') {
         dispatch(createTask(task));
       } else if (saveMode === 'Edit') { 
-       // dispatch(updateTask(task));
+        dispatch(updateTask(task));
       }
       handleBack(); 
     }
@@ -69,14 +70,26 @@ export function Tasks() {
     setCreateEditVisible(false);
   };
 
-  const handleChangeStatus = (e : any ,rowId: number, state: number) => { 
+  const handleChangeStatus = (e : any ,rowId: number, status: number) => { 
     e.preventDefault();
     console.log(rowId);
-    //dispatch(createTask(task));
+    _task = new Task();
+    _task.id = rowId;
+    _task.status = status;
+    dispatch(updateTaskStatus(_task));
   };
  
-  const handleEdit = (e : any ,row: Task) => { 
+
+  const handleDelete = (e : any, rowId: number) => { 
     e.preventDefault();
+    debugger
+    console.log(rowId); 
+    dispatch(deleteTask(rowId));
+  };
+ 
+  const handleEdit = (e : any, row: Task) => { 
+    e.preventDefault();
+    debugger
     console.log(row);
     setTask(row);
     setSaveMode('Edit');

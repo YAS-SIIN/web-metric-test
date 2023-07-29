@@ -59,15 +59,34 @@ const updateTask = async (_inputData: Task = new Task()) => {
     return response.json(); 
 };
   
+  
+/** 
+ * call updateTask Rest Api from back-end server to update task status  
+ * @param {Task} Task - object of task data 
+ */
+const updateTaskStatus = async (_inputData: Task = new Task()) => {
+  debugger
+  //call updateTask Rest API from server
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/updateTaskStatus`, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(_inputData)
+  });
+    return response.json(); 
+};
+  
 /** 
  * call deleteTask Rest Api from back-end server to delete new task  
  * @param {number} id - id
  */
 const deleteTask = async (id: number) => {
   debugger
-  //call updateTaskStatus Rest API from server
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/updateTaskStatus/${id}`, {
-    method: 'PUT',
+  //call deleteTask Rest API from server
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/deleteTask/${id}`, {
+    method: 'DELETE',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -82,6 +101,7 @@ const taskService = {
   getTasks,
   createTask,
   updateTask,
+  updateTaskStatus,
   deleteTask
 };
 export default taskService;

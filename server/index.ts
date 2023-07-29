@@ -92,7 +92,7 @@ app.put('/api/updateTask', (req, res) => {
   let baseResponseData: BaseResponseModel = new BaseResponseModel();
   var dataBody: Task = req.body ? req.body : null;
 
-  if (!(dataBody.status === undefined || dataBody.id === undefined || dataBody.task === undefined || dataBody.task === '')) {
+  if (!(dataBody.status === undefined || dataBody.id === undefined)) {
     taskService.tasks().then((datalist: Task[]) => {
 
       datalist = datalist.map(a => {
@@ -101,6 +101,40 @@ app.put('/api/updateTask', (req, res) => {
         }
         else {
           return dataBody;
+        }
+      });
+
+      taskService.newTasks(JSON.stringify(datalist)).then();
+
+      baseResponseData.message = 'Done successfully';
+      res.status(200).send(baseResponseData);
+    });
+  } else {
+    baseResponseData.message = 'Data not entered';
+    res.status(500).send(baseResponseData).statusMessage = baseResponseData.message;
+  }
+});
+
+
+/**
+* service method to update tasks
+* @returns update task
+*/
+app.put('/api/updateTaskStatus', (req, res) => {
+  console.log('updateTaskStatus - body is ', req.body);
+  let baseResponseData: BaseResponseModel = new BaseResponseModel();
+  var dataBody: Task = req.body ? req.body : null;
+
+  if (!(dataBody.status === undefined || dataBody.id === undefined)) {
+    taskService.tasks().then((datalist: Task[]) => {
+
+      datalist = datalist.map(a => {
+        if (a.id !== dataBody.id) {
+          return a;
+        }
+        else {
+          a.status = dataBody.status;
+          return a;
         }
       });
 
