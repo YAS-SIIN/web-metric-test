@@ -26,11 +26,11 @@ export class Task {
  
 /**
  * Tasks filter
- * @typedef filData
+ * @typedef FilterData
  * @type {object}
  * @property {number} status - Task status {waiting , done, cancel}
  */
-export class filData { 
+export class FilterData { 
   /**
    * Task status {vacation , sickness}
    */

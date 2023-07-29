@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 
 import React, { useEffect, useState } from 'react';
 import Alert from 'react-bootstrap/Alert';
@@ -9,7 +10,7 @@ import Row from 'react-bootstrap/Row';
 import DataTable from 'react-data-table-component';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-import { Task, filData } from '../../utils/models';
+import { Task, FilterData } from '../../utils/models';
 import { createTask, deleteTask, getTasksList, updateTask, updateTaskStatus } from './tasksSlice';
 import { Spinner } from 'react-bootstrap';
 
@@ -22,22 +23,25 @@ export function Tasks() {
   const columns = [
     { name: 'Task', selector: row => row.task },
     { name: 'Status', selector: row => row.status === 1 ? 'waiting' : row.status === 2 ? 'done' : 'canceled' },
-    { name: 'Actions', cell: (props) => (
-      <> 
-      {props.status === 1 && <Button variant="warning" onClick={(e)=> {handleEdit(e, props)}}>Edit</Button>} 
-      {props.status === 1 && <Button variant="success" onClick={(e)=> {handleChangeStatus(e, props.id, 2)}}>Confirm</Button>}
-      {props.status === 1 && <Button variant="danger" onClick={(e)=> {handleChangeStatus(e, props.id, 3)}}>Cancele</Button>}
-      {props.status === 1 && <Button variant="danger" onClick={(e)=> {handleDelete(e, props.id)}}>Delete</Button>}
-      </>)  },
+    {
+      name: 'Actions', cell: (props) => (
+        <>
+          {props.status === 1 && <Button variant="warning" onClick={(e) => { handleEdit(e, props) }}>Edit</Button>}
+          {props.status === 1 && <Button variant="success" onClick={(e) => { handleChangeStatus(e, props.id, 2) }}>Confirm</Button>}
+          {props.status === 1 && <Button variant="danger" onClick={(e) => { handleChangeStatus(e, props.id, 3) }}>Cancele</Button>}
+          {props.status === 1 && <Button variant="danger" onClick={(e) => { handleDelete(e, props.id) }}>Delete</Button>}
+        </>)
+    },
   ];
 
-  let _filData = new filData();
+  let _filterData = new FilterData();
   let _task = new Task();
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState(0);
   const [createEditVisible, setCreateEditVisible] = useState(false);
   const [saveMode, setSaveMode] = useState('New');
   const [task, setTask] = useState(_task);
+  const [filterData, setFilterData] = useState(_filterData);
 
   /**
 * method to filter data
@@ -45,22 +49,22 @@ export function Tasks() {
 */
   const handleFilter = () => {
 
-    _filData = new filData();
-    _filData.status = status;
-
-    dispatch(getTasksList(_filData));
+    _filterData = new FilterData();
+    _filterData.status = status;
+    setFilterData(_filterData);
+    dispatch(getTasksList(filterData));
   };
 
 
   const handleSubmit = () => {
-    debugger
+
     if (task) {
       if (saveMode === 'New') {
         dispatch(createTask(task));
-      } else if (saveMode === 'Edit') { 
+      } else if (saveMode === 'Edit') {
         dispatch(updateTask(task));
       }
-      handleBack(); 
+      handleBack();
     }
   };
 
@@ -70,7 +74,7 @@ export function Tasks() {
     setCreateEditVisible(false);
   };
 
-  const handleChangeStatus = (e : any ,rowId: number, status: number) => { 
+  const handleChangeStatus = (e: any, rowId: number, status: number) => {
     e.preventDefault();
     console.log(rowId);
     _task = new Task();
@@ -78,44 +82,51 @@ export function Tasks() {
     _task.status = status;
     dispatch(updateTaskStatus(_task));
   };
- 
 
-  const handleDelete = (e : any, rowId: number) => { 
+
+  const handleDelete = (e: any, rowId: number) => {
     e.preventDefault();
-    debugger
-    console.log(rowId); 
-    dispatch(deleteTask(rowId));
+    if (confirm('Are you sure?')) {
+      console.log(rowId);
+      dispatch(deleteTask(rowId));
+    }
   };
- 
-  const handleEdit = (e : any, row: Task) => { 
+
+  const handleEdit = (e: any, row: Task) => {
     e.preventDefault();
-    debugger
+
     console.log(row);
     setTask(row);
     setSaveMode('Edit');
     setCreateEditVisible(true);
     //dispatch(createTask(task));
   };
- 
-  const handleNew = () => { 
-    _task = new Task();
-    _task.task='';
-    setTask(_task);  
-    setSaveMode('New');
-    setCreateEditVisible(true); 
-  };
- 
-  useEffect(() => {
 
-    dispatch(getTasksList(_filData));
-  }, [dispatch]);
+  const handleNew = () => {
+    _task = new Task();
+    _task.task = '';
+    setTask(_task);
+    setSaveMode('New');
+    setCreateEditVisible(true);
+  };
 
   const {
     tasks,
     loading,
     error,
-    dataChanged,
+    dataChanged
   } = useAppSelector((state) => state.tasksReducer);
+
+  useEffect(() => {
+    debugger
+    dispatch(getTasksList(filterData));
+
+    if (dataChanged) {
+      dispatch(getTasksList(filterData));
+      setCreateEditVisible(false);
+    }
+
+  }, [dispatch, dataChanged, filterData]);
 
   return (
     <div>

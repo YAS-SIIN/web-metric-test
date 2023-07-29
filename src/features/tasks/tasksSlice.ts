@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import tasksService from "../../services/taskService";
-import { InitialStateModel, Task, filData } from "../../utils/models";
+import { InitialStateModel, Task, FilterData } from "../../utils/models";
 
 
-const initialState : InitialStateModel = {
+const initialState = {
   tasks: [],
   task: new Task(),
   loading: false,
@@ -14,9 +14,9 @@ const initialState : InitialStateModel = {
 
 /**
  * Thunk to get tasks list in redux
- * @param {filData} _filData - object of filter data : {status}
+ * @param {FilterData} _filData - object of filter data : {status}
  */
-export const getTasksList = createAsyncThunk("getTasks", async (_filData: filData = new filData()) => {
+export const getTasksList = createAsyncThunk("getTasks", async (_filData: FilterData = new FilterData()) => {
    
   //call getTasks service method
   const res = await tasksService.getTasks(_filData);

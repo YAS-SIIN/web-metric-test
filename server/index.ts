@@ -1,5 +1,5 @@
 
-import { BaseResponseModel, Task, TaskResponseModel, filData } from "./models/models";
+import { BaseResponseModel, Task, TaskResponseModel, FilterData } from "./models/models";
 import taskService from "./services/taskService";
 import express from "express";
 
@@ -41,7 +41,7 @@ app.get("/api/hello", (req, res) => {
 */
 app.post('/api/getTasks', (req, res) => {
   console.log('getTasks - body is ', req.body);
-  var dataBody: filData = req.body;
+  var dataBody: FilterData = req.body;
   console.log('filter data is :', dataBody);
   taskService.tasks().then((datalist: Task[]) => {
 

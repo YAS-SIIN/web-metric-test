@@ -1,13 +1,13 @@
-import { Task, TaskResponseModel, filData } from "../utils/models";
+import { Task, TaskResponseModel, FilterData } from "../utils/models";
 
  
 
 /** 
  * call getTasks Rest Api from back-end server to retrieve list of tasks  
- * @param {filData} _filData - object of filter data : {status}
+ * @param {FilterData} _filData - object of filter data : {status}
  * @returns list of tasks 
  */
-const getTasks = async (_filData: filData = new filData()) : Promise<TaskResponseModel> => {
+const getTasks = async (_filData: FilterData = new FilterData()) : Promise<TaskResponseModel> => {
   console.log(process.env.REACT_APP_API_URL);
   //call getTasks Rest API from server
   const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/getTasks`, {
@@ -28,7 +28,7 @@ const getTasks = async (_filData: filData = new filData()) : Promise<TaskRespons
  * @returns new task 
  */
 const createTask = async (_inputData: Task = new Task()) => {
-  debugger
+  
   //call createTask Rest API from server
   const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/createTask`, {
     method: 'POST',
@@ -46,7 +46,7 @@ const createTask = async (_inputData: Task = new Task()) => {
  * @param {Task} Task - object of task data 
  */
 const updateTask = async (_inputData: Task = new Task()) => {
-  debugger
+  
   //call updateTask Rest API from server
   const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/updateTask`, {
     method: 'PUT',
@@ -65,7 +65,7 @@ const updateTask = async (_inputData: Task = new Task()) => {
  * @param {Task} Task - object of task data 
  */
 const updateTaskStatus = async (_inputData: Task = new Task()) => {
-  debugger
+  
   //call updateTask Rest API from server
   const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/updateTaskStatus`, {
     method: 'PUT',
@@ -83,7 +83,7 @@ const updateTaskStatus = async (_inputData: Task = new Task()) => {
  * @param {number} id - id
  */
 const deleteTask = async (id: number) => {
-  debugger
+  
   //call deleteTask Rest API from server
   const response = await fetch(`${process.env.REACT_APP_API_URL}/Api/deleteTask/${id}`, {
     method: 'DELETE',
