@@ -118,7 +118,7 @@ export function Tasks() {
   } = useAppSelector((state) => state.tasksReducer);
 
   useEffect(() => {
-    debugger
+    
     dispatch(getTasksList(filterData));
 
     if (dataChanged) {

@@ -3,7 +3,7 @@ import tasksService from "../../services/taskService";
 import { InitialStateModel, Task, FilterData } from "../../utils/models";
 
 
-const initialState = {
+const initialState : InitialStateModel = {
   tasks: [],
   task: new Task(),
   loading: false,
@@ -89,7 +89,7 @@ const tasksSlice = createSlice({
       state.dataChanged = false;
     });
     builder.addCase(getTasksList.fulfilled, (state, action) => {
-      debugger
+      
       state.loading = false;
       state.tasks = action.payload.data; 
       state.dataChanged = false;
@@ -100,66 +100,66 @@ const tasksSlice = createSlice({
     });
 
     builder.addCase(createTask.pending, (state, action) => {
-      debugger
+      
       state.loading = true;
       state.dataChanged = false;
     });
     builder.addCase(createTask.fulfilled, (state, action) => {
-      debugger
+      
       state.loading = false; 
       state.dataChanged = true;
     });
     builder.addCase(createTask.rejected, (state, action) => {
-      debugger
+      
       state.error = true;
       state.dataChanged = false;
     });
 
     builder.addCase(updateTask.pending, (state, action) => {
-      debugger
+      
       state.loading = true;
       state.dataChanged = false;
     });
     builder.addCase(updateTask.fulfilled, (state, action) => {
-      debugger
+      
       state.loading = false; 
       state.dataChanged = true;
     });
     builder.addCase(updateTask.rejected, (state, action) => {
-      debugger
+      
       state.error = true;
       state.dataChanged = false;
     });
 
     builder.addCase(updateTaskStatus.pending, (state, action) => {
-      debugger
+      
       state.loading = true;
       state.dataChanged = false;
     });
     builder.addCase(updateTaskStatus.fulfilled, (state, action) => {
-      debugger
+      
       state.loading = false; 
       state.dataChanged = true;
     });
     builder.addCase(updateTaskStatus.rejected, (state, action) => {
-      debugger
+      
       state.error = true;
       state.dataChanged = false;
     });
 
 
     builder.addCase(deleteTask.pending, (state, action) => {
-      debugger
+      
       state.loading = true;
       state.dataChanged = false;
     });
     builder.addCase(deleteTask.fulfilled, (state, action) => {
-      debugger
+      
       state.loading = false; 
       state.dataChanged = true;
     });
     builder.addCase(deleteTask.rejected, (state, action) => {
-      debugger
+      
       state.error = true;
       state.dataChanged = false;
     });
